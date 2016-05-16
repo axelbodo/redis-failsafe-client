@@ -13,10 +13,10 @@ var client = new RedisCluster({[
 
 function test() {
     client.set('foo', 'bar', function (err, reply){
-        console.log(err ? err : reply)
+        console.log(err ? err : reply);
     });
     client.get('foo', function (err, reply){
-        console.log(err ? err : reply)
+        console.log(err ? err : reply);
     });
 }
 
