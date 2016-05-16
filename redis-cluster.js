@@ -61,7 +61,7 @@ function onControlError(err) {
     var index = 0;
     var connection;
     var self = this;
-    var endPoints = this.cluster.nodes;
+    var endPoints = this.clusterConfig.nodes;
     function next() {
         if (index > endPoints.length) {
             self.emit('error', new Error('ERROR: ECLUSTERUNREACHABLE'));
@@ -110,13 +110,13 @@ function updateCluster(forceUpdate) {
 
 function initializeCluster(cluster) {
     console.log('init cluster:', this.controlConnection.port);
-    if(!this.cluster)this.cluster = cluster;
+    if(!this.clusterConfig)this.clusterConfig = cluster;
     this.slots = new Array(16384);
     for (var index = 0; index < cluster.nodes.length; index++) {
         var node = cluster.nodes[index];
-        if (!this.cluster.nodes[node.id]) {
-            this.cluster.nodes.push(node);
-            this.cluster.nodes[node.id] = node;
+        if (!this.clusterConfig.nodes[node.id]) {
+            this.clusterConfig.nodes.push(node);
+            this.clusterConfig.nodes[node.id] = node;
         }
         if (node.isMaster && !node.failed) {
             for (var rangeIndex = 0; rangeIndex < node.slots.length; rangeIndex++) {
@@ -174,8 +174,8 @@ RedisCluster.prototype.getConnection = function (slot) {
 
 RedisCluster.prototype.close = function () {
     if (this.controlConnection) this.controlConnection.close();
-    for (var nodeindex = 0; nodeindex < this.cluster.nodes.length; nodeindex++) {
-        var node = this.cluster.nodes[nodeindex];
+    for (var nodeindex = 0; nodeindex < this.clusterConfig.nodes.length; nodeindex++) {
+        var node = this.clusterConfig.nodes[nodeindex];
         if (node.connection)node.connection.close();
     }
 }

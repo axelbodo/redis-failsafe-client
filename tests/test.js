@@ -57,4 +57,25 @@ function get(i) {
         }
     }
 };
-redis.on('ready', start);
+
+function deltest() {
+    redis.del('foo', function (err, reply) {
+        logger.log('del', reply, err);
+        hmsettest();
+    });
+}
+
+function hmsettest() {
+    redis.hmset('foo', 'a', 1, 'b', 2, 'c', 3, function (err, reply) {
+        logger.log('hmset', reply, err);
+        hmgettest();
+    });
+}
+
+function hmgettest() {
+    redis.hgetall('foo', function (err, reply) {
+        logger.log('hgetall', reply, err);
+    });
+}
+
+redis.on('ready', deltest);
