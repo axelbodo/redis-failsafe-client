@@ -75,6 +75,7 @@ function hmsettest() {
 function hmgettest() {
     redis.hgetall('foo', function (err, reply) {
         logger.log('hgetall', reply, err);
+        redis.close(); //should end the executuon as al sockets should be unrefed
     });
 }
 

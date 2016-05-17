@@ -1,6 +1,6 @@
 {
     "name": "redis-failsafe-client",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "A redis client for redis clusters, which recovers in case of cluster failover or rehashing.",
     "main": "redis-cluster.js",
     "author": {
@@ -9,10 +9,16 @@
     },
     "dependencies": {
     },
+    "devDependencies": { 
+        "istanbul": "*"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/axelbodo/redis-failsafe-client"
     },
     "license": "MIT",
-    "keywords": ["redis", "client", "cluster", "failsafe"]
+    "keywords": [ "redis", "client", "cluster", "failsafe", "failover" ],
+    "scripts": {
+        "test": "node tests/test.js"
+    }
 }
