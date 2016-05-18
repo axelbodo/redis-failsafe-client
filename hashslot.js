@@ -42,6 +42,15 @@ function crc16(buf) {
 }
 
 function hashSlot(key) {
+	var index = key.toString().indexOf('{');
+	if(index != -1) {
+		key = key.toString();
+		var last = key.indexOf('}', index);
+		if(last != -1 && last - index > 1) {
+			key = key.substr(index + 1, last - index -1);
+		}
+		key = new Buffer(key);
+	}
     return crc16(key) & 0x3fff;
 }
 
