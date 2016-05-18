@@ -5,7 +5,7 @@ A redis client for redis clusters, which recovers in case of cluster failover or
 # Install
 
 ```
-npm install redis-failsaf-client
+npm install redis-failsafe-client
 ```
 
 # Basic usage
