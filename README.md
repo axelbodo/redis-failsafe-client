@@ -13,12 +13,12 @@ npm install redis-failsafe-client
 ```javascript
 var redis = require('redis-failsafe-client');
 
-var client = new RedisCluster({[
+var client = new RedisCluster([
     {host: 'localhost', port: 7001},
     {host: 'localhost', port: 7002},
     {host: 'localhost', port: 7003},
     {host: 'localhost', port: 7004}
-]});
+]);
 
 function test() {
     client.set('foo', 'bar', function (err, reply){
