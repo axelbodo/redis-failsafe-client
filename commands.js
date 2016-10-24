@@ -1,16 +1,16 @@
 ﻿var hashslot = require('./hashslot');
-function get(key, cb) {
-    var slot = hashslot(new Buffer(key));
-    //var slot = 12182;
-    var connection = this.getConnection(slot);
-    send('get', [key], cb, connection, slot);
-}
+//function get(key, cb) {
+//    var slot = hashslot(new Buffer(key));
+//    //var slot = 12182;
+//    var connection = this.getConnection(slot);
+//    send('get', [key], cb, connection, slot);
+//}
 
-function set(key, value, cb) {
-    var slot = hashslot(new Buffer(key));
-    var connection = this.getConnection(slot);
-    send('set', [key, value], cb, connection, slot);
-}
+//function set(key, value, cb) {
+//    var slot = hashslot(new Buffer(key));
+//    var connection = this.getConnection(slot);
+//    send('set', [key, value], cb, connection, slot);
+//}
 
 function sentinel(job, err, reply) {
     if (err) {
@@ -26,7 +26,9 @@ function sentinel(job, err, reply) {
         }
         //TODO: handle -ASK and -MOVE
     }
-    job.guarded(err, reply);
+    if (typeof job.guarded == 'function') {
+        job.guarded(err, reply);
+    }
 }
 
 function send(command, args, cb, connection, slot) {
@@ -55,8 +57,8 @@ function send(command, args, cb, connection, slot) {
     //console.log(connection.port);
     connection.write(job);
 }
-module.exports.get = get;
-module.exports.set = set;
+//module.exports.get = get;
+//module.exports.set = set;
 
 var NULL = null;
 //TODO: implement these as functions

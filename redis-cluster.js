@@ -6,6 +6,7 @@ var cluster_mod = require('./cluster'); var Cluster = cluster_mod.Cluster;
 function RedisCluster(initialEndpoints) {
     this.initialEndpoints = [];
     this.currentIndex = 0;
+    this.connected = false;
     for (var index = 0; index < initialEndpoints.length; index++) {
         var initialEndpoint = initialEndpoints[index];
         var currentEndpoint = {
@@ -36,7 +37,7 @@ function bootstrap(endpoints) {
         var endpoint = endpoints[index];
         console.log('probing control connectiom:', endpoint.port);
         connection = new Connection(endpoint.host, endpoint.port);
-        connection.write({data: 'cluster nodes\r\n', callback: parsecluster});
+        connection.write({ data: 'cluster nodes\r\n', callback: parsecluster });
         index++;
         connection.once('error', next);
     }
@@ -58,6 +59,7 @@ function bootstrap(endpoints) {
 function onControlError(err) {
     this.clusterUpdating = true;
     this.controlConnection = undefined;
+    this.connected = false;
     var index = 0;
     var connection;
     var self = this;
@@ -147,6 +149,7 @@ function initializeCluster(cluster) {
         this.bootstrapping = false;
     }
     this.clusterUpdating = false;
+    this.connected = true;
     setTimeout(function() {
         while (self.queue.length > 0) {
             var job = self.queue.shift();
