@@ -83,7 +83,7 @@ Parser.prototype.parseString = function (result) {
         return 1;
     }
     if (this.parseBuffer.length - offset < length + 2) return 0;
-    result.push(this.parseBuffer.toString('ascii', offset, offset + length));
+    result.push(this.parseBuffer.slice(offset, offset + length));
     this.offset = offset + length + 2;
     return 1;
 }
@@ -95,7 +95,7 @@ Parser.prototype.parseInt = function (result) {
         }
     }
     if (i == this.parseBuffer.length) return 0;
-    result.push(+this.parseBuffer.toString('ascii', this.offset, i - 1));
+    result.push(+this.parseBuffer.toString(undefined, this.offset, i - 1));
     this.offset = i + 1;
     return 1;
 }
@@ -104,7 +104,7 @@ Parser.prototype.parseList = function (result) {
     var length = -1;
     for (var i = this.offset; i < this.parseBuffer.length; i++) {
         if (this.parseBuffer[i] == 10) {
-            length = +this.parseBuffer.toString('ascii', this.offset, i - 1);
+            length = +this.parseBuffer.toString(undefined, this.offset, i - 1);
             break;
         }
     }
@@ -126,7 +126,7 @@ Parser.prototype.parseMessage = function (result) {
     }
     var offset = i + 1;
     if (i == this.parseBuffer.length) return;
-    result.push(this.parseBuffer.toString('ascii', this.offset, i - 1));
+    result.push(this.parseBuffer.toString(undefined, this.offset, i - 1));
     this.offset = i + 1;
     return 1;
 }

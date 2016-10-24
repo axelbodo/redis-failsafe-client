@@ -253,6 +253,6 @@ redisCommandTable.forEach(function (commandStruct) {
             slot = hashslot(new Buffer(realArgs[commandStruct[6] - 1]));
         }
         var connection = this.getConnection(slot);
-        send(command, realArgs, cb, connection, slot);
+        send.call(this, command, realArgs, cb, connection, slot);
     };
 });

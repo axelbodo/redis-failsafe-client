@@ -35,7 +35,7 @@ function bootstrap(endpoints) {
             return;
         }
         var endpoint = endpoints[index];
-        console.log('probing control connectiom:', endpoint.port);
+        console.log('probing control connection:', endpoint.port);
         connection = new Connection(endpoint.host, endpoint.port);
         connection.write({ data: 'cluster nodes\r\n', callback: parsecluster });
         index++;
@@ -43,7 +43,7 @@ function bootstrap(endpoints) {
     }
     function parsecluster(err, reply) {
         if (err) next();
-        var cluster = new Cluster(reply);
+        var cluster = new Cluster(reply.toString());
         self.controlConnection = connection;
         connection.removeListener('error', next);
         self.controlConnection.on('error',
@@ -71,14 +71,14 @@ function onControlError(err) {
         }
         var endpoint = endPoints[index];
         connection = new Connection(endpoint.host, endpoint.port);
-        console.log('probing control connectiom:', endpoint.port);
+        console.log('probing control connection:', endpoint.port);
         connection.write({data: 'cluster nodes\r\n', callback: parsecluster});
         index++;
         connection.once('error', next);
     }
     function parsecluster(err, reply) {
         if (err) next();
-        var cluster = new Cluster(reply);
+        var cluster = new Cluster(reply.toString());
         self.controlConnection = connection;
         self.controlConnection.on('error',
             function (err) {
@@ -105,7 +105,7 @@ function updateCluster(forceUpdate) {
     this.controlConnection.write({data: 'cluster nodes\r\n', callback: parsecluster});
     function parsecluster(err, reply) {
         if (err) onControlError.call(self, err);
-        var cluster = new Cluster(reply);
+        var cluster = new Cluster(reply.toString());
         initializeCluster.call(self, cluster);
     }
 }
@@ -161,6 +161,18 @@ function initializeCluster(cluster) {
 
 RedisCluster.prototype.getConnection = function (slot) {
     //TODO: calculating slot
+	if(slot === undefined) {
+		node = this.clusterConfig.nodes[this.currentIndex];
+		this.currentIndex = (this.currentIndex+1) % this.clusterConfig.nodes.length;
+		if(!node.connection) {
+			node.connection = new Connection(node.host, node.port);
+			var self = this;
+			node.connection.on('error', function (connection, err) {
+				onClusterNodeError.call(self, node, err);
+			});
+		}
+		return node.connection;
+	}
     var node = this.slots[slot];
     if (!node) {
         return undefined;

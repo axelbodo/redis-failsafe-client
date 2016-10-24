@@ -1,6 +1,6 @@
 {
     "name": "redis-failsafe-client",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "A redis client for redis clusters, which recovers in case of cluster failover or rehashing.",
     "main": "redis-cluster.js",
     "author": {
